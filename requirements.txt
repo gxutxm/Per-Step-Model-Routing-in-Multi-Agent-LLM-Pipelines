@@ -1,0 +1,3 @@
+# Python dependencies for the model client.
+litellm>=1.87.0
+python-dotenv>=1.0.0
