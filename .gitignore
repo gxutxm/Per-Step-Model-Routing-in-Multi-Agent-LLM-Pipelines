@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Environment variables / API keys
+.env
+.env.*
+!.env.example
+
+# Cache
+cache/
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Raw datasets (too big for git)
+data/bird/
+data/hotpot/
+minidev.zip
