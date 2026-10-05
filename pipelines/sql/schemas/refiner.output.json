@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sql": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "sql"
+  ],
+  "additionalProperties": false,
+  "title": "sql.refiner output"
+}

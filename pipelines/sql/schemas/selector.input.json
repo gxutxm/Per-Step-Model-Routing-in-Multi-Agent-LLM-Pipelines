@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "db_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "db_id",
+    "schema",
+    "question",
+    "evidence"
+  ],
+  "additionalProperties": false,
+  "title": "sql.selector input"
+}

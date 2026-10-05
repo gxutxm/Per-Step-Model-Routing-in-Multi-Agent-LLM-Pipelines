@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "resolved_question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "retrieved": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "description": "Paragraph titles, best first."
+    }
+  },
+  "required": [
+    "resolved_question",
+    "retrieved"
+  ],
+  "additionalProperties": false,
+  "title": "BM25 retrieval output (not an LLM step, logged for analysis)"
+}

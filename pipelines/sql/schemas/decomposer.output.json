@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sub_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "final_sql": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "sub_questions",
+    "final_sql"
+  ],
+  "additionalProperties": false,
+  "title": "sql.decomposer output"
+}

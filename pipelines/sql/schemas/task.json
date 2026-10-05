@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SQL task",
+  "description": "One row of BIRD Mini-Dev mini_dev_prompt.jsonl (extra fields allowed).",
+  "type": "object",
+  "required": [
+    "question_id",
+    "db_id",
+    "question",
+    "evidence",
+    "SQL",
+    "schema",
+    "difficulty"
+  ],
+  "properties": {
+    "question_id": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "db_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "SQL": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "difficulty": {
+      "enum": [
+        "simple",
+        "moderate",
+        "challenging"
+      ]
+    }
+  }
+}

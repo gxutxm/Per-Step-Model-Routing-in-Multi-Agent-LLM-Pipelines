@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pipeline": {
+      "const": "sql"
+    },
+    "final_sql": {
+      "type": "string"
+    },
+    "stop_reason": {
+      "type": "string"
+    },
+    "refines": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "step": {
+                "const": "sql.selector"
+              },
+              "parse_ok": {
+                "type": "boolean"
+              },
+              "output": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "oneOf": [
+                        {
+                          "enum": [
+                            "keep_all",
+                            "drop_all"
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "stats": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "step",
+              "parse_ok",
+              "output",
+              "stats"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "step": {
+                "const": "sql.decomposer"
+              },
+              "parse_ok": {
+                "type": "boolean"
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "sub_questions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "final_sql": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sub_questions",
+                  "final_sql"
+                ],
+                "additionalProperties": false,
+                "title": "sql.decomposer output"
+              }
+            },
+            "required": [
+              "step",
+              "parse_ok",
+              "output"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "step": {
+                "const": "sql.refiner"
+              },
+              "parse_ok": {
+                "type": "boolean"
+              },
+              "attempt": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "trigger": {
+                "type": "string"
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "sql": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sql"
+                ],
+                "additionalProperties": false,
+                "title": "sql.refiner output"
+              }
+            },
+            "required": [
+              "step",
+              "parse_ok",
+              "attempt",
+              "trigger",
+              "output"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "task_id",
+    "pipeline",
+    "final_sql",
+    "stop_reason",
+    "steps"
+  ],
+  "additionalProperties": false,
+  "title": "SQL pipeline trace"
+}

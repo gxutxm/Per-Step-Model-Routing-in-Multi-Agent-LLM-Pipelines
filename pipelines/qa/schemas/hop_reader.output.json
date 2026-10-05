@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "answer": {
+      "type": "string"
+    },
+    "found": {
+      "type": "boolean"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "minimum": 0
+          }
+        ],
+        "items": false,
+        "minItems": 2
+      },
+      "description": "[paragraph title, sentence index]; comparable to HotpotQA supporting_facts."
+    }
+  },
+  "required": [
+    "answer",
+    "found",
+    "evidence"
+  ],
+  "additionalProperties": false,
+  "title": "qa.hop_reader output"
+}

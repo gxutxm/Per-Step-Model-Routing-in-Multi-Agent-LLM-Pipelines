@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "question_type": {
+      "enum": [
+        "bridge",
+        "comparison"
+      ]
+    },
+    "sub_questions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "description": "Bridge hops may contain #1, #2 = answer of an earlier hop."
+    }
+  },
+  "required": [
+    "question_type",
+    "sub_questions"
+  ],
+  "additionalProperties": false,
+  "title": "qa.decomposer output"
+}
