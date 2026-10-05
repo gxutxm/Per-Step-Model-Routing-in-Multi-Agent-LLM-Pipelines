@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sql": {
+      "type": "string"
+    },
+    "sqlite_error": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exception_class": {
+      "type": "string"
+    },
+    "result_preview": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "question",
+    "evidence",
+    "schema",
+    "sql",
+    "sqlite_error",
+    "exception_class",
+    "result_preview"
+  ],
+  "additionalProperties": false,
+  "title": "sql.refiner input"
+}

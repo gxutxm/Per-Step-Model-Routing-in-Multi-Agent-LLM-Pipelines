@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "enum": [
+        "bridge",
+        "comparison"
+      ]
+    },
+    "level": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "paragraphs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "sentences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "sentences"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "gold_answer": {
+      "type": "string"
+    },
+    "supporting_facts": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "minimum": 0
+          }
+        ],
+        "items": false,
+        "minItems": 2
+      }
+    }
+  },
+  "required": [
+    "task_id",
+    "question",
+    "type",
+    "level",
+    "paragraphs",
+    "gold_answer",
+    "supporting_facts"
+  ],
+  "additionalProperties": false,
+  "title": "QA task",
+  "description": "One HotpotQA distractor question in our format (steps.from_hotpot)."
+}

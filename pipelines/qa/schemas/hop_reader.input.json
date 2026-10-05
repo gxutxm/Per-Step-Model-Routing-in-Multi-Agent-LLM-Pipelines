@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sub_question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "After #k substitution."
+    },
+    "paragraphs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "sentences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "sentences"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 3
+    }
+  },
+  "required": [
+    "sub_question",
+    "paragraphs"
+  ],
+  "additionalProperties": false,
+  "title": "qa.hop_reader input"
+}

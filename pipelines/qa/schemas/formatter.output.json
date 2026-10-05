@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "final_answer": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "final_answer"
+  ],
+  "additionalProperties": false,
+  "title": "qa.formatter output"
+}

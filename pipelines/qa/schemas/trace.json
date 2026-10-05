@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pipeline": {
+      "const": "qa"
+    },
+    "final_answer": {
+      "type": "string"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "step": {
+                "const": "qa.decomposer"
+              },
+              "parse_ok": {
+                "type": "boolean"
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "question_type": {
+                    "enum": [
+                      "bridge",
+                      "comparison"
+                    ]
+                  },
+                  "sub_questions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "description": "Bridge hops may contain #1, #2 = answer of an earlier hop."
+                  }
+                },
+                "required": [
+                  "question_type",
+                  "sub_questions"
+                ],
+                "additionalProperties": false,
+                "title": "qa.decomposer output"
+              }
+            },
+            "required": [
+              "step",
+              "parse_ok",
+              "output"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "step": {
+                "const": "qa.hop_reader"
+              },
+              "parse_ok": {
+                "type": "boolean"
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "answer": {
+                    "type": "string"
+                  },
+                  "found": {
+                    "type": "boolean"
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      ],
+                      "items": false,
+                      "minItems": 2
+                    },
+                    "description": "[paragraph title, sentence index]; comparable to HotpotQA supporting_facts."
+                  },
+                  "sub_question": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "resolved_question": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "retrieved": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 3,
+                    "description": "Paragraph titles, best first."
+                  },
+                  "sentences": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "answer",
+                  "found",
+                  "evidence",
+                  "sub_question",
+                  "resolved_question",
+                  "retrieved",
+                  "sentences"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "step",
+              "parse_ok",
+              "output"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "step": {
+                "const": "qa.composer"
+              },
+              "parse_ok": {
+                "type": "boolean"
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "answer": {
+                    "type": "string"
+                  },
+                  "reasoning": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "answer",
+                  "reasoning"
+                ],
+                "additionalProperties": false,
+                "title": "qa.composer output"
+              }
+            },
+            "required": [
+              "step",
+              "parse_ok",
+              "output"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "step": {
+                "const": "qa.formatter"
+              },
+              "parse_ok": {
+                "type": "boolean"
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "final_answer": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "final_answer"
+                ],
+                "additionalProperties": false,
+                "title": "qa.formatter output"
+              }
+            },
+            "required": [
+              "step",
+              "parse_ok",
+              "output"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "task_id",
+    "pipeline",
+    "final_answer",
+    "steps"
+  ],
+  "additionalProperties": false,
+  "title": "QA pipeline trace",
+  "description": "Returned by qa.steps.run; one per task per model assignment."
+}

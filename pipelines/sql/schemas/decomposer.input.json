@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "question",
+    "evidence"
+  ],
+  "additionalProperties": false,
+  "title": "sql.decomposer input",
+  "description": "schema = pruned DDL after the selector."
+}

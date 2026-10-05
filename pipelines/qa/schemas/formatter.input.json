@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "draft_answer": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "question",
+    "draft_answer"
+  ],
+  "additionalProperties": false,
+  "title": "qa.formatter input"
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": {
+    "oneOf": [
+      {
+        "enum": [
+          "keep_all",
+          "drop_all"
+        ]
+      },
+      {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    ]
+  },
+  "title": "sql.selector output",
+  "description": "table -> keep_all | drop_all | [columns]. Missing tables are kept."
+}
