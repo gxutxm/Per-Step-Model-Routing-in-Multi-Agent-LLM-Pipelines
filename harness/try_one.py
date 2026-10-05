@@ -32,6 +32,7 @@ def main() -> None:
     print(f"text: {result.text}")
     print(f"prompt_tokens: {result.prompt_tokens}")
     print(f"completion_tokens: {result.completion_tokens}")
+    print(f"cached: {result.cached}")
     print(f"seconds: {elapsed:.4f}")
 
 
