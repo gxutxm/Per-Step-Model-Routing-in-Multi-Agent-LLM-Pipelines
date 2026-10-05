@@ -1,0 +1,31 @@
+# Runs the offline harness tests on every pull request and on pushes to main.
+# No API keys or GPU are used; model calls are replaced with fake responses.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # Use LiteLLM's bundled model price list instead of downloading it.
+      LITELLM_LOCAL_MODEL_COST_MAP: "True"
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Import the harness
+        run: python -c "import harness"
+
+      - name: Run tests
+        run: python -m unittest discover -s harness -t . -p "test_*.py" -v
