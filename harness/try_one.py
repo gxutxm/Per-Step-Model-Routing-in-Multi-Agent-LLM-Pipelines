@@ -11,6 +11,7 @@ From the repository root:
     python -m harness.try_one qwen
 """
 
+import logging
 import sys
 import time
 
@@ -22,6 +23,9 @@ def main() -> None:
         print("Usage: python -m harness.try_one <flash|flash-lite|qwen>")
         sys.exit(1)
 
+    logging.basicConfig(level=logging.WARNING, format="%(message)s")
+    logging.getLogger("harness").setLevel(logging.INFO)
+
     model = sys.argv[1]
     messages = [{"role": "user", "content": "Reply with exactly: hello"}]
 
@@ -32,6 +36,7 @@ def main() -> None:
     print(f"text: {result.text}")
     print(f"prompt_tokens: {result.prompt_tokens}")
     print(f"completion_tokens: {result.completion_tokens}")
+    print(f"cost: ${result.cost:.6f}")
     print(f"cached: {result.cached}")
     print(f"seconds: {elapsed:.4f}")
 

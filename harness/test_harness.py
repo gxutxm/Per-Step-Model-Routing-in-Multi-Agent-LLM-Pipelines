@@ -17,6 +17,7 @@ from unittest import mock
 
 from harness import cache
 from harness.client import call
+from harness.pricing import PRICING_PER_1M, compute_cost
 
 HELLO = [{"role": "user", "content": "Reply with exactly: hello"}]
 
@@ -146,6 +147,56 @@ class CacheTests(HarnessTestCase):
         b = [{"content": "hi", "role": "user"}]
         self.assertEqual(cache.cache_key("flash", a), cache.cache_key("flash", b))
 
+class CostTests(HarnessTestCase):
+    def setUp(self):
+        super().setUp()
+        os.environ["GEMINI_API_KEY"] = "test-key"
+
+    def test_flash_cost_comes_from_the_price_table(self):
+        self.completion.return_value = fake_response(
+            prompt_tokens=1000, completion_tokens=500
+        )
+        result = call("flash", HELLO)
+        # 1000 * $1.50/1M + 500 * $9.00/1M
+        self.assertAlmostEqual(result.cost, 0.006)
+
+    def test_flash_lite_is_cheaper_than_flash(self):
+        self.completion.return_value = fake_response(
+            prompt_tokens=1000, completion_tokens=500
+        )
+        flash = call("flash", HELLO)
+        lite = call("flash-lite", HELLO)
+        # 1000 * $0.30/1M + 500 * $2.50/1M
+        self.assertAlmostEqual(lite.cost, 0.00155)
+        self.assertLess(lite.cost, flash.cost)
+
+    def test_qwen_is_free(self):
+        os.environ["QWEN_API_BASE"] = "http://qwen-host:8000/v1"
+        self.assertEqual(call("qwen", HELLO).cost, 0.0)
+
+    def test_cached_call_still_reports_cost(self):
+        first = call("flash", HELLO)
+        second = call("flash", HELLO)
+        self.assertTrue(second.cached)
+        self.assertAlmostEqual(second.cost, first.cost)
+        self.assertGreater(second.cost, 0)
+
+    def test_call_logs_tokens_and_cost(self):
+        with self.assertLogs("harness.client", level="INFO") as logs:
+            call("flash", HELLO)
+        line = logs.output[0]
+        self.assertIn("tokens_in=6", line)
+        self.assertIn("tokens_out=1", line)
+        self.assertIn("cost=$", line)
+
+    def test_every_model_has_a_price(self):
+        from harness.client import MODELS
+
+        self.assertEqual(set(MODELS), set(PRICING_PER_1M))
+
+    def test_unknown_model_has_no_price(self):
+        with self.assertRaises(KeyError):
+            compute_cost("gpt", 1, 1)
 
 if __name__ == "__main__":
     unittest.main()

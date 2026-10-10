@@ -6,6 +6,7 @@ provider, sends the request through LiteLLM, and returns the response
 text with token counts. Repeated requests are read from the disk cache.
 """
 
+import logging
 import os
 from dataclasses import dataclass
 
@@ -14,6 +15,9 @@ from dotenv import load_dotenv
 
 from harness.cache import get as cache_get
 from harness.cache import put as cache_put
+from harness.pricing import compute_cost
+
+logger = logging.getLogger(__name__)
 
 # Load API settings from a local .env file when present.
 load_dotenv()
@@ -35,6 +39,30 @@ class ModelResponse:
     prompt_tokens: int
     completion_tokens: int
     cached: bool = False
+    cost: float = 0.0
+
+
+def _build_response(
+    text: str, model: str, prompt_tokens: int, completion_tokens: int, cached: bool
+) -> ModelResponse:
+    """Attach the cost to a response and log the token counts."""
+    cost = compute_cost(model, prompt_tokens, completion_tokens)
+    logger.info(
+        "model=%s tokens_in=%d tokens_out=%d cost=$%.6f cached=%s",
+        model,
+        prompt_tokens,
+        completion_tokens,
+        cost,
+        cached,
+    )
+    return ModelResponse(
+        text=text,
+        model=model,
+        prompt_tokens=prompt_tokens,
+        completion_tokens=completion_tokens,
+        cached=cached,
+        cost=cost,
+    )
 
 
 def call(model: str, messages: list[dict]) -> ModelResponse:
@@ -50,11 +78,11 @@ def call(model: str, messages: list[dict]) -> ModelResponse:
 
     stored = cache_get(model, messages)
     if stored is not None:
-        return ModelResponse(
-            text=stored["text"],
-            model=stored["model"],
-            prompt_tokens=stored["prompt_tokens"],
-            completion_tokens=stored["completion_tokens"],
+        return _build_response(
+            stored["text"],
+            stored["model"],
+            stored["prompt_tokens"],
+            stored["completion_tokens"],
             cached=True,
         )
 
@@ -89,11 +117,11 @@ def call(model: str, messages: list[dict]) -> ModelResponse:
     response = litellm.completion(**kwargs)
     usage = response.usage
 
-    result = ModelResponse(
-        text=response.choices[0].message.content or "",
-        model=model,
-        prompt_tokens=getattr(usage, "prompt_tokens", 0) or 0,
-        completion_tokens=getattr(usage, "completion_tokens", 0) or 0,
+    result = _build_response(
+        response.choices[0].message.content or "",
+        model,
+        getattr(usage, "prompt_tokens", 0) or 0,
+        getattr(usage, "completion_tokens", 0) or 0,
         cached=False,
     )
     cache_put(
